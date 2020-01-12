@@ -17,11 +17,30 @@ from django.urls import include
 from django.contrib import admin
 from django.urls import path
 
-from core.views import PeopleListView
+from rest_framework.routers import DefaultRouter
+
+from core.views import (
+    PeopleListView,
+    PeopleGenericView,
+    PeopleInstanceView,
+    PeopleViewSet,
+    PlanetViewSet,
+    PlanetListView,
+    PlanetInstanceView
+)
+
+router = DefaultRouter()
+router.register(r'peoples', PeopleViewSet, basename='people')
+router.register(r'planets', PlanetViewSet, basename='planet')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('people/', PeopleListView.as_view()),
+    path('api/people/', PeopleListView.as_view()),
+    path('api/people/v2/', PeopleGenericView.as_view()),
+    path('api/people/v2/<int:pk>/', PeopleInstanceView.as_view()),
+    path('api/planets/', PlanetListView.as_view()),
+    path('api/planets/<int:pk>/', PlanetInstanceView.as_view()),
+    path('v3/', include(router.urls)),
 
     path('api-auth/', include('rest_framework.urls')),
 ]
